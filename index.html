@@ -145,7 +145,9 @@ body.locked .app{display:none}
 .abrand{font-weight:800;font-size:21px;color:#0F2A3F;line-height:1.2}.abrand span{display:block;font-size:12px;color:#52667A;letter-spacing:.06em}
 .muted{color:var(--ink2);font-size:13px}
 .mt td,.mt th{white-space:nowrap}.mt input[type=text]{border:1px solid #c5d1db;border-radius:7px;padding:5px 8px;min-height:34px;width:150px}.mt select{border:1px solid #c5d1db;border-radius:7px;padding:5px;min-height:34px}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script></head><body>
+</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script><style>
+.members-panel{color:#20382d}.members-title{display:flex;align-items:center;justify-content:space-between;gap:16px}.members-title h2{margin:0;font-size:23px;font-weight:800}.member-close{border:0;background:transparent;font-size:25px;color:#53675b;cursor:pointer}.member-list{max-height:280px;overflow-y:auto;margin:12px 0 22px}.member-item{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 0}.member-info{min-width:0}.member-info b{display:block;font-size:15px}.member-info small{display:block;color:#586e60;overflow-wrap:anywhere;margin-top:3px}.member-actions{display:flex;gap:8px;flex-shrink:0}.member-actions .btn{padding:5px 10px;background:#fff;border:1px solid #cbd8ce;color:#20382d}.member-actions .member-delete{border-color:#f08080;color:#d33}.member-actions .member-delete:disabled{opacity:.4;cursor:default}.members-panel h3{font-size:15px;margin:0 0 12px}.members-form label{display:block;color:#53675b;font-size:14px;font-weight:600}.members-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.members-form input:not([type=checkbox]),.members-form select{box-sizing:border-box;width:100%;min-height:42px;margin-top:6px;padding:9px 12px;border:1px solid #cbd8ce;border-radius:8px;background:white;color:#20382d;font:inherit}.members-form .member-check{display:flex;align-items:center;gap:7px;margin-top:12px}.member-note{font-size:13px;color:#586e60;margin:10px 0;line-height:1.5}.members-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}.member-primary{background:#1e704c!important;border-color:#1e704c!important;color:#fff!important}.members-form input:focus,.members-form select:focus{outline:2px solid #1e704c;outline-offset:1px}@media(max-width:520px){.members-fields{grid-template-columns:1fr}.member-item{align-items:flex-start}.member-actions{gap:4px}.members-title h2{font-size:20px}}
+</style></head><body>
 <div class="app"><aside class="rail"><div class="brand">Quản lý kho<span>ĐĂNG KHOA SPORT</span></div><nav class="nav" id="nav" aria-label="Kỳ báo cáo"></nav><div id="who"></div></aside><main class="main" id="main"></main></div>
 <div class="authwrap" id="auth" hidden></div>
 <div class="modal" id="modal" hidden></div><div class="toast" id="toast" role="status" hidden></div>
@@ -263,7 +265,7 @@ function periodView(r){
   let h='<header class="head"><div>'+(r.kind==='month'?'<p style="font-size:12.5px;color:var(--ink2)">Năm '+r.y+' ›</p>':'')+'<h1>'+r.title+'</h1><div class="meta"><span>'+dmy(r.from)+' – '+dmy(r.to)+'</span>'+chipHtml()+'</div></div>'+
    '<div class="actions"><button class="btn sell" data-act="tk" data-type="xuat"'+dis+'>↑ Bán hàng</button><button class="btn in" data-act="tk" data-type="nhap"'+dis+'>↓ Nhập hàng</button><button class="btn cnt" data-act="cnt"'+dis+'>✓ Kiểm kho</button></div></header>'+bannerHtml();
   h+='<section class="alerts" aria-label="Cảnh báo tồn kho"><button class="al low'+(ui.st==='low'?' on':'')+'" data-act="st" data-v="low"><span>! Sắp hết</span><b>'+nLow+'</b><small>mặt hàng · bấm để lọc</small></button><button class="al out'+(ui.st==='out'?' on':'')+'" data-act="st" data-v="out"><span>× Hết hàng</span><b>'+nOut+'</b><small>mặt hàng · bấm để lọc</small></button>'+(ui.st?'<button class="btn" data-act="st" data-v="">Bỏ lọc</button>':'')+'</section>';
-  h+='<section class="kpis">'+kpi('Tồn kho đầu kỳ',money(t.openVal),num(t.openQty)+' sản phẩm','k1')+kpi('Doanh thu',money(t.rev),num(t.xuat)+' sản phẩm bán ra','rev')+kpi('Giá vốn hàng bán',money(t.cogs),'Theo giá nhập từng đợt (nhập trước xuất trước)','k3')+kpi('Lãi gộp',money(t.gp),'Biên lãi gộp '+pct(t.gp,t.rev),'gp')+kpi('Tồn kho cuối kỳ',money(t.closeVal),'Chuyển sang kỳ sau · '+num(t.closeQty)+' sản phẩm','k4')+'</section>';
+  h+='<section class="kpis">'+kpi('Tồn kho đầu kỳ',num(t.openQty)+' sản phẩm','Giá trị: '+money(t.openVal),'k1')+kpi('Doanh thu',money(t.rev),num(t.xuat)+' sản phẩm bán ra','rev')+kpi('Giá vốn hàng bán',money(t.cogs),'Theo giá nhập từng đợt (nhập trước xuất trước)','k3')+kpi('Lãi gộp',money(t.gp),'Biên lãi gộp '+pct(t.gp,t.rev),'gp')+kpi('Tồn kho cuối kỳ',num(t.closeQty)+' sản phẩm','Giá trị: '+money(t.closeVal)+' · Chuyển sang kỳ sau','k4')+'</section>';
   h+='<div class="recon"><b>Đối chiếu tồn:</b> '+money(t.openVal)+' + '+money(t.nhapVal)+' (tiền nhập hàng) − '+money(t.cogs)+' ± '+money(t.dcVal)+' (điều chỉnh) = <b>'+money(t.openVal+t.nhapVal-t.cogs+t.dcVal)+'</b> '+(ok?'<span class="okk">✓ khớp tồn cuối kỳ</span>':'<span style="color:var(--ct);font-weight:700">lệch '+money(diff)+'</span>')+'<br><small>Giá vốn tính theo từng đợt nhập: hàng nhập trước bán trước, mỗi đợt giữ giá nhập riêng.</small></div>';
   h+='<section class="card gcard"><div class="gh"><div><h2>Bảng xuất nhập tồn</h2><p>'+r.title+' · '+dmy(r.from)+' – '+dmy(r.to)+'</p></div><span class="gpill">Tồn cuối kỳ này = tồn đầu kỳ sau</span></div><div class="tools" style="padding-top:12px"><input id="xq" type="search" placeholder="Tìm theo tên…" value="'+esc(ui.q)+'"><select id="xs"><option value="name"'+(ui.sort==='name'?' selected':'')+'>Sắp xếp theo tên</option><option value="low"'+(ui.sort==='low'?' selected':'')+'>Tồn thấp trước</option></select></div><div id="xnt"></div></section>';
   h+='<section class="card"><div class="ch"><div><h2>Nhật ký nhập xuất</h2><p id="jcount"></p></div></div><div class="tools" id="jf"><label class="fld">Từ ngày<input id="jf-from" type="date" value="'+ui.f.from+'"></label><label class="fld">Đến ngày<input id="jf-to" type="date" value="'+ui.f.to+'"></label><label class="fld">Loại phiếu<select id="jf-loai"><option value="">Tất cả</option>'+Object.keys(LOAI).map(k=>'<option value="'+k+'"'+(ui.f.loai===k?' selected':'')+'>'+LOAI[k]+'</option>').join('')+'</select></label><label class="fld">Sản phẩm<select id="jf-sp"><option value="">Tất cả</option>'+state.products.map(p=>'<option value="'+esc(p.id)+'"'+(ui.f.sp===p.id?' selected':'')+'>'+esc(p.name)+'</option>').join('')+'</select></label><label class="fld">Người nhập<select id="jf-user"><option value="">Tất cả</option>'+[...new Set(tickets().map(t=>t.user).filter(Boolean))].map(u=>'<option'+(ui.f.user===u?' selected':'')+'>'+esc(u)+'</option>').join('')+'</select></label></div><div id="jr"></div></section>';
@@ -509,9 +511,9 @@ document.addEventListener('click',e=>{
     case'row':ui.open.has(d.id)?ui.open.delete(d.id):ui.open.add(d.id);paintX();break;
     case'prod-new':openProd();break;case'prod-edit':openProd(d.id);break;case'del-prod':arm(t,()=>delProd(d.id));break;
     case'more':ui.more+=60;paintJ();break;case'close':closeModal();break;
-    case'logout':doLogout();break;case'members':openMembers();break;case'mb-save':saveMember(d.uid);break;case'export':exportData();break;case'ex-copy':exCopy();break;case'ex-dl':exDl();break;case'restore':openRestore();break;case'rs-run':runRestore();break;case'seed':seed();break;case'start-real':startReal();break;case'clear-sample':arm(t,clearSample);break}});
+    case'logout':doLogout();break;case'members':openMembers();break;case'mb-edit':openEditMember(d.uid);break;case'mb-delete':deleteMember(d.uid,t);break;case'export':exportData();break;case'ex-copy':exCopy();break;case'ex-dl':exDl();break;case'restore':openRestore();break;case'rs-run':runRestore();break;case'seed':seed();break;case'start-real':startReal();break;case'clear-sample':arm(t,clearSample);break}});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();if(e.key==='Enter'&&e.target.id==='tk-q'){e.preventDefault();const l=state.products.filter(p=>norm(p.name).includes(norm(e.target.value)));if(l[0])tkAdd(l[0].id)}});
-document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;if(f.id==='tkf')submitTicket();else if(f.id==='ckf')submitCount();else if(f.id==='imf')submitImport();else if(f.id==='lgf')doLogin(f);else if(f.id==='cxf')submitCancel(f);else if(f.id==='pf')submitProd(f)});
+document.addEventListener('submit',e=>{e.preventDefault();const f=e.target;if(f.id==='tkf')submitTicket();else if(f.id==='ckf')submitCount();else if(f.id==='imf')submitImport();else if(f.id==='lgf')doLogin(f);else if(f.id==='new-member-form')createMember(f);else if(f.id==='edit-member-form')saveEditedMember(f);else if(f.id==='cxf')submitCancel(f);else if(f.id==='pf')submitProd(f)});
 document.addEventListener('input',e=>{const t=e.target,i=t.id;
   if(t.classList&&t.classList.contains('mi')){const dg=t.value.replace(/\D/g,''),f=dg?nf.format(+dg):'';if(f!==t.value){t.value=f;try{t.setSelectionRange(f.length,f.length)}catch(x){}}}
   if(i==='xq'){ui.q=t.value;paintX()}else if(i==='xs'){ui.sort=t.value;paintX()}
@@ -567,15 +569,79 @@ async function startSession(session){
 function renderWho(){const w=$('#who');if(!w)return;if(!state.me){w.innerHTML='';return}
   w.innerHTML='<div class="who"><div><b>'+esc(state.uname)+'</b><small>'+(state.admin?'Quản trị viên':'Nhân viên')+'</small></div><button class="btn sm" data-act="logout">Đăng xuất</button>'+(state.admin?'<button class="btn sm" data-act="members">Quản lý thành viên</button><button class="btn sm" data-act="export">Xuất dữ liệu</button><button class="btn sm" data-act="restore">Nhập dữ liệu</button>':'')+'</div>'}
 /* --- Quản lý thành viên (quản trị viên) --- */
-async function openMembers(){if(!state.admin)return;showModal('<h2>Quản lý thành viên</h2><p>Đang tải…</p>');
-  const{data,error}=await sb.from('members').select('*').order('created_at');
-  if(error){showModal('<h2>Quản lý thành viên</h2><p class="err">'+esc(error.message)+'</p><div class="mact"><button class="btn" data-act="close">Đóng</button></div>');return}
-  showModal('<h2>Quản lý thành viên</h2><p class="muted">Tạo tài khoản mới trong Supabase (Authentication → Users → Add user), sau đó quay lại đây để kích hoạt, đặt tên hiển thị và vai trò.</p><div class="scroll"><table class="mt plain"><thead><tr><th class="l">Email</th><th class="l">Tên hiển thị</th><th class="l">Vai trò</th><th>Được sửa phiếu</th><th>Hoạt động</th><th></th></tr></thead><tbody>'+
-   data.map(m=>{const me=m.user_id===sbUid;return'<tr data-uid="'+esc(m.user_id)+'"><td class="l">'+esc(m.email)+(m.active?'':' <span class="pill low">Chờ kích hoạt</span>')+'</td><td class="l"><input type="text" data-k="name" maxlength="40" value="'+esc(m.display_name)+'"></td><td class="l"><select data-k="role"'+(me?' disabled':'')+'><option value="staff"'+(m.role==='staff'?' selected':'')+'>Nhân viên</option><option value="admin"'+(m.role==='admin'?' selected':'')+'>Quản trị viên</option></select></td><td><input type="checkbox" data-k="edit"'+(m.can_edit?' checked':'')+'></td><td><input type="checkbox" data-k="active"'+(m.active?' checked':'')+(me?' disabled':'')+'></td><td><button class="btn sm" data-act="mb-save" data-uid="'+esc(m.user_id)+'">Lưu</button></td></tr>'}).join('')+'</tbody></table></div><div class="mact"><button class="btn" data-act="close">Đóng</button></div>')}
-async function saveMember(uid){const tr=document.querySelector('#modal tr[data-uid="'+uid+'"]');if(!tr)return;const g=k=>tr.querySelector('[data-k="'+k+'"]');
-  const name=g('name').value.trim();if(!name){toast('Nhập tên hiển thị.',true);return}
-  const{error}=await sb.from('members').update({display_name:name,role:g('role').value,can_edit:g('edit').checked,active:g('active').checked}).eq('user_id',uid);
-  if(error)toast('Không lưu được: '+error.message,true);else{toast('Đã cập nhật thành viên.');if(uid===sbUid){state.uname=name}}}
+let memberList=[];
+function memberFields(member){
+  const editing=!!member;
+  const own=editing&&member.user_id===sbUid;
+  return '<form id="'+(editing?'edit-member-form':'new-member-form')+'" class="members-form"'+(editing?' data-uid="'+esc(member.user_id)+'"':'')+'>'+
+    '<div class="members-fields"><label>Email<input id="member-email" type="email" required maxlength="254" value="'+esc(member?.email||'')+'"'+(editing?' readonly':'')+'></label>'+
+    '<label>Họ tên<input id="member-name" required maxlength="40" value="'+esc(member?.display_name||'')+'"></label></div>'+
+    '<label>Vai trò<select id="member-role"'+(own?' disabled':'')+'><option value="staff"'+(!editing||member.role==='staff'?' selected':'')+'>Nhân viên</option><option value="admin"'+(editing&&member.role==='admin'?' selected':'')+'>Quản trị viên (toàn quyền)</option></select></label>'+
+    '<label class="member-check"><input id="member-edit" type="checkbox"'+(!editing||member.can_edit?' checked':'')+'> Được sửa phiếu</label>'+
+    (editing?'<label class="member-check"><input id="member-active" type="checkbox"'+(member.active?' checked':'')+(own?' disabled':'')+'> Hoạt động</label>':'<p class="member-note">Tài khoản được tạo và kích hoạt ngay. Mật khẩu đăng nhập: <b>777888</b>.</p>')+
+    '<p id="member-error" class="err" role="alert"></p><div class="members-footer"><button class="btn" type="button" data-act="'+(editing?'members':'close')+'">'+(editing?'Quay lại':'Đóng')+'</button><button class="btn member-primary" type="submit" id="member-submit">'+(editing?'Lưu thay đổi':'Thêm thành viên')+'</button></div></form>';
+}
+async function openMembers(){
+  if(!state.admin)return;
+  showModal('<h2>THÀNH VIÊN</h2><p>Đang tải…</p>');
+  const {data,error}=await sb.from('members').select('*').order('created_at');
+  if(error){showModal('<h2>THÀNH VIÊN</h2><p class="err">'+esc(error.message)+'</p><button class="btn" data-act="close">Đóng</button>');return}
+  memberList=data;
+  const list=data.map(member=>{
+    const own=member.user_id===sbUid;
+    return '<div class="member-item"><div class="member-info"><b>'+esc(member.display_name)+(own?' (bạn)':'')+'</b><small>'+esc(member.email)+' · '+(member.role==='admin'?'Quản trị viên':'Nhân viên')+(!member.active?' · Chưa kích hoạt':'')+'</small></div><div class="member-actions"><button class="btn" data-act="mb-edit" data-uid="'+member.user_id+'">Sửa</button><button class="btn member-delete" data-act="mb-delete" data-uid="'+member.user_id+'"'+(own?' disabled':'')+'>Xóa</button></div></div>';
+  }).join('');
+  showModal('<div class="members-panel"><div class="members-title"><h2>THÀNH VIÊN</h2><button class="member-close" data-act="close" aria-label="Đóng">×</button></div><div class="member-list">'+list+'</div><h3>THÊM THÀNH VIÊN</h3>'+memberFields(null)+'</div>');
+}
+function openEditMember(uid){
+  if(!state.admin)return;
+  const member=memberList.find(m=>m.user_id===uid);
+  if(member)showModal('<div class="members-panel"><div class="members-title"><h2>SỬA THÀNH VIÊN</h2><button class="member-close" data-act="close" aria-label="Đóng">×</button></div>'+memberFields(member)+'</div>');
+}
+async function callMemberAdmin(body){
+  const {data,error}=await sb.auth.getSession();
+  if(error||!data.session)throw new Error('Vui lòng đăng nhập lại.');
+  const response=await fetch(SUPABASE_URL+'/functions/v1/member-admin',{
+    method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_PUBLISHABLE_KEY,'Authorization':'Bearer '+data.session.access_token},body:JSON.stringify(body)
+  });
+  let result;
+  try{result=await response.json()}catch{throw new Error('Không nhận được kết quả. Mở lại danh sách để kiểm tra email trước khi thử lại.')}
+  if(!response.ok)throw new Error(result.error||result.message||'Kiểm tra Edge Function member-admin đã triển khai.');
+  return result;
+}
+async function createMember(form){
+  if(!state.admin||form.dataset.busy==='1'||!form.reportValidity())return;
+  const button=form.querySelector('#member-submit'),errorBox=form.querySelector('#member-error');
+  form.dataset.busy='1';button.disabled=true;button.textContent='Đang tạo…';errorBox.textContent='';
+  try{
+    await callMemberAdmin({action:'create',email:form.querySelector('#member-email').value.trim(),display_name:form.querySelector('#member-name').value.trim(),role:form.querySelector('#member-role').value,can_edit:form.querySelector('#member-edit').checked});
+    toast('Đã tạo thành viên. Mật khẩu đăng nhập: 777888');await openMembers();
+  }catch(error){errorBox.textContent=error instanceof TypeError?'Không kết nối được. Kiểm tra Edge Function member-admin rồi mở lại danh sách để kiểm tra email.':error.message}
+  finally{form.dataset.busy='0';button.disabled=false;button.textContent='Thêm thành viên'}
+}
+async function saveEditedMember(form){
+  if(!state.admin||form.dataset.busy==='1'||!form.reportValidity())return;
+  const errorBox=form.querySelector('#member-error'),button=form.querySelector('#member-submit');
+  const name=form.querySelector('#member-name').value.trim();
+  if(!name){errorBox.textContent='Vui lòng nhập họ tên.';return}
+  form.dataset.busy='1';button.disabled=true;errorBox.textContent='';
+  try{
+    const {data,error}=await sb.from('members').update({display_name:name,role:form.querySelector('#member-role').value,active:form.querySelector('#member-active').checked,can_edit:form.querySelector('#member-edit').checked}).eq('user_id',form.dataset.uid).select('user_id').single();
+    if(error||!data)throw error||new Error('Không lưu được thành viên.');
+    if(form.dataset.uid===sbUid){state.uname=name;renderWho()}
+    toast('Đã lưu thành viên.');await openMembers();
+  }catch(error){errorBox.textContent=error.message}
+  finally{form.dataset.busy='0';button.disabled=false}
+}
+async function deleteMember(uid,button){
+  if(!state.admin||uid===sbUid)return;
+  const member=memberList.find(m=>m.user_id===uid);
+  if(!member||!confirm('Xóa tài khoản '+member.email+'? Người này sẽ mất quyền đăng nhập kho.'))return;
+  button.disabled=true;
+  try{await callMemberAdmin({action:'delete',user_id:uid});toast('Đã xóa thành viên.');await openMembers()}
+  catch(error){toast(error.message||'Không xóa được thành viên.',true);button.disabled=false}
+}
+
 /* --- Nhập dữ liệu từ file xuất (quản trị viên) --- */
 function openRestore(){if(!state.admin)return;
   showModal('<h2>Nhập dữ liệu từ file JSON</h2><p class="muted">Dùng file xuất từ bản Claude cũ (hoặc từ chính app này). Mã sản phẩm và ngày trùng sẽ bị ghi đè; dữ liệu khác được giữ nguyên.</p><input type="file" id="rs-file" accept=".json,application/json"><textarea id="rs-t" rows="7" placeholder="…hoặc dán nội dung JSON vào đây" style="width:100%;font:12px monospace;border:1px solid #c5d1db;border-radius:8px;padding:8px;margin-top:8px"></textarea><label class="chk" style="margin-top:8px"><input type="checkbox" id="rs-ok"> Tôi hiểu dữ liệu trùng mã sẽ bị ghi đè</label><div class="err" id="rs-err" role="alert"></div><div class="mact"><button class="btn" data-act="close">Hủy</button><button class="btn in" data-act="rs-run">Nhập dữ liệu</button></div>');
