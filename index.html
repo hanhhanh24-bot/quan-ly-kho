@@ -164,6 +164,11 @@ th{background:#60432F;color:#FFF8E9;padding:12px 14px}.plain th,.gx th{backgroun
 @media(max-width:1380px){.panel:has(#imf){max-width:950px}.imh{display:none}.imr{grid-template-columns:repeat(3,minmax(0,1fr))}.imr .c:first-child{grid-column:1/-1}.imr .c::before{display:block;font-size:12px;font-weight:600;color:#786454;content:attr(data-l);margin-bottom:5px}}
 @media(max-width:860px){body{padding-left:12px;padding-right:12px}.app{grid-template-columns:1fr;padding-top:12px}.rail{padding:10px}.head{padding:18px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi{padding:14px}.kpi .v{font-size:22px}.row2{grid-template-columns:1fr}.panel:has(#imf){width:100%;padding:18px}.modal{padding:12px 8px}.imr{grid-template-columns:1fr 1fr;gap:12px}.imr .c:first-child,.imr .c:nth-child(4){grid-column:1/-1}.imtot{flex-wrap:wrap}.ch h2{font-size:17px}}
 @media print{body{background:#fff;padding:0;font-size:10pt}.app{display:block;max-width:none;padding:0}.rail,.actions,.tools,.alerts,.modal,.toast{display:none!important}.head,.card,.kpi{box-shadow:none;break-inside:avoid}.kpis{grid-template-columns:repeat(5,1fr)}.kpi .v{font-size:14pt}.main{gap:12px}.scroll{overflow:visible}th,td{font-size:8pt;padding:5px}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}@page{size:A4 landscape;margin:10mm}
+</style><style id="dashboard-balanced">
+.app{max-width:1540px;grid-template-columns:205px minmax(0,1fr);gap:20px;padding-top:20px}body{padding-left:20px;padding-right:20px}.head{padding:18px 20px}h1{font-size:25px}.main{gap:16px}.kpis{gap:12px}.kpi{padding:15px}.kpi .v{font-size:23px}.kpi.rev .v,.kpi.gp .v{font-size:25px}.ch{padding:15px 18px}.ch h2{font-size:17px}.gh{padding:16px 18px}.gh h2{font-size:18px}td{padding:9px 12px}.mact .btn.danger{margin-right:auto;background:#A83C2E;border-color:#A83C2E;color:#fff}
+@media(max-width:1250px) and (min-width:861px){.app{grid-template-columns:185px minmax(0,1fr)}.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:860px){body{padding-left:12px;padding-right:12px}.app{grid-template-columns:1fr;padding-top:12px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.kpi .v{font-size:21px}.head{padding:16px}}
+@media print{.app{display:block;max-width:none}.kpis{grid-template-columns:repeat(5,minmax(0,1fr))}.kpi .v,.kpi.rev .v,.kpi.gp .v{font-size:14pt}}
 </style></head><body>
 <div class="app"><aside class="rail"><div class="brand">Quản lý kho<span>ĐĂNG KHOA SPORT</span></div><nav class="nav" id="nav" aria-label="Kỳ báo cáo"></nav><div id="who"></div></aside><main class="main" id="main"></main></div>
 <div class="authwrap" id="auth" hidden></div>
@@ -470,7 +475,21 @@ function viewTicket(pid){const t=tickets().find(x=>x.pid===pid);if(!t)return;con
   t.lines.forEach(l=>{const p=pm.get(l.sp);h+='<tr><td class="l">'+esc(p?p.name:l.sp)+(t.loai==='nhap'&&!t.huy&&sq.get(l.id)?' - '+sq.get(l.id):'')+'</td>'+(t.loai==='dc'?'<td>'+num(l.truoc)+'</td><td>'+num(l.sau)+' ('+(l.sl>0?'+':'')+num(l.sl)+')</td><td class="l">'+esc(l.lydo)+'</td>':'<td>'+num(l.sl)+(l.dv?' <small>('+num(l.dvSl)+' '+(l.dv==='thung'?'thùng':'lốc')+')</small>':'')+'</td><td>'+num(l.gia)+'</td><td>'+num(l.sl*l.gia)+'</td>')+'</tr>'});
   h+='</tbody>'+(t.loai==='dc'?'':'<tfoot><tr><td class="l" colspan="3">Tổng tiền</td><td>'+money(tTotal(t))+'</td></tr></tfoot>')+'</table></div>';
   if(t.sua.length||t.huy)h+='<h3 style="margin:14px 0 4px;font-size:14px">Lịch sử</h3><ul style="margin:0;padding-left:18px">'+t.sua.map(s=>'<li>Sửa bởi <b>'+esc(s.by)+'</b> · '+dt(s.at)+' · Lý do: '+esc(s.ly)+'</li>').join('')+(t.huy?'<li style="color:var(--ct)">Hủy bởi <b>'+esc(t.huy.by)+'</b> · '+dt(t.huy.at)+' · Lý do: '+esc(t.huy.ly)+'</li>':'')+'</ul>';
-  showModal(h+'<div class="mact" style="margin-top:14px"><button class="btn" data-act="close">Đóng</button>'+(canEditT()&&!t.huy&&t.loai!=='dc'?'<button class="btn in" data-act="edit" data-pid="'+esc(t.pid)+'">Chỉnh sửa phiếu</button>':'')+'</div>')}
+  showModal(h+'<div class="mact" style="margin-top:14px">'+(state.admin&&canWrite()?'<button class="btn danger" data-act="delete-ticket" data-pid="'+esc(t.pid)+'">Xóa phiếu</button>':'')+'<button class="btn" data-act="close">Đóng</button>'+(canEditT()&&!t.huy&&t.loai!=='dc'?'<button class="btn in" data-act="edit" data-pid="'+esc(t.pid)+'">Chỉnh sửa phiếu</button>':'')+'</div>')}
+async function deleteTicket(pid,button){
+  if(!state.admin||!canWrite())return;
+  const ticket=tickets().find(t=>t.pid===pid);
+  if(!ticket)return;
+  if(!confirm('Xóa vĩnh viễn phiếu '+ticket.ma+'? Tồn kho, doanh thu và lãi gộp sẽ được tính lại.'))return;
+  button.disabled=true;button.textContent='Đang xóa…';
+  try{
+    const {data,error}=await sb.rpc('delete_inventory_ticket',{p_date:ticket.date,p_pid:ticket.pid});
+    if(error)throw error;
+    if(data!==true)throw new Error('Chưa nhận được xác nhận xóa phiếu. Tải lại nhật ký để kiểm tra.');
+    closeModal();refetch('days');toast('Đã xóa phiếu '+ticket.ma+'.');
+  }catch(error){toast(error.message||'Không xóa được phiếu. Kiểm tra đã chạy xoa-phieu.sql.',true)}
+  finally{button.disabled=false;button.textContent='Xóa phiếu'}
+}
 function openCancel(pid){if(!state.admin||!canWrite())return;const t=tickets().find(x=>x.pid===pid);if(!t||t.huy)return;
   showModal('<form id="cxf" class="mform" data-pid="'+esc(pid)+'"><h2>Hủy phiếu '+esc(t.ma)+'?</h2><p>Phiếu hủy vẫn tra được trong nhật ký. Tồn kho, doanh thu và giá vốn sẽ được tính lại như chưa có phiếu này.</p><label class="fld">Lý do hủy (bắt buộc)<input id="cx-ly" type="text" maxlength="100"></label><div class="err" role="alert"></div><div class="mact"><button type="button" class="btn" data-act="close">Giữ phiếu</button><button type="submit" class="btn danger" data-act="save">Hủy phiếu</button></div></form>')}
 function submitCancel(f){const pid=f.dataset.pid,ly=$('#cx-ly').value.trim(),t=tickets().find(x=>x.pid===pid),er=$('#modal .err');
@@ -521,7 +540,7 @@ document.addEventListener('click',e=>{
   if(e.target.id==='modal'){closeModal();return}
   const t=e.target.closest('[data-act]');if(!t||t.disabled)return;if(t.tagName==='TR'&&e.target.closest('.mc'))return;const d=t.dataset;
   switch(d.act){
-    case'tk':d.type==='nhap'?openImport():openTicket(d.type);break;case'im-add':im.rows.push(blankRow());imBody();break;case'im-del':im.rows.splice(+d.i,1);if(!im.rows.length)im.rows.push(blankRow());imBody();break;case'cnt':openCount();break;case'edit':{const tt=tickets().find(x=>x.pid===d.pid);tt&&tt.loai==='nhap'?openImport(d.pid):openTicket(null,d.pid);break}case'cancel':openCancel(d.pid);break;case'view':viewTicket(d.pid);break;
+    case'tk':d.type==='nhap'?openImport():openTicket(d.type);break;case'im-add':im.rows.push(blankRow());imBody();break;case'im-del':im.rows.splice(+d.i,1);if(!im.rows.length)im.rows.push(blankRow());imBody();break;case'cnt':openCount();break;case'edit':{const tt=tickets().find(x=>x.pid===d.pid);tt&&tt.loai==='nhap'?openImport(d.pid):openTicket(null,d.pid);break}case'cancel':openCancel(d.pid);break;case'view':viewTicket(d.pid);break;case'delete-ticket':deleteTicket(d.pid,t);break;
     case'tk-add':tkAdd(d.id);break;case'tk-addsel':{const ids=[...tk.sel];if(!ids.length){toast('Hãy tick ít nhất một sản phẩm.',true);break}ids.forEach(i=>tkAdd(i,true));tk.sel.clear();tkBody();tkRes($('#tk-q').value);break}case'tk-del':tk.items.splice(+d.i,1);tkBody();break;
     case'st':ui.st=ui.st===d.v?'':d.v;render();break;
     case'row':ui.open.has(d.id)?ui.open.delete(d.id):ui.open.add(d.id);paintX();break;
