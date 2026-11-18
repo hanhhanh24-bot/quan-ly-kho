@@ -281,7 +281,10 @@ function bannerHtml(){
 function render(){const r=route();renderNav(r);$('#main').innerHTML=r.kind==='products'?productsView():periodView(r);if(r.kind!=='products'){paintX();paintJ()}}
 function kpi(l,v,s,c){return'<div class="kpi'+(c?' '+c:'')+'"><div class="l">'+l+'</div><div class="v">'+v+'</div><div class="s">'+s+'</div></div>'}
 function periodView(r){
-  const c=compute(r.from,r.to),t=c.t,dis=canWrite()?'':' disabled';V={r,c};
+  const c=compute(r.from,r.to),t=c.t,dis=canWrite()?'':' disabled';
+  const recordedProducts=new Set(active(state.lines).map(line=>line.sp));
+  c.rows=c.rows.filter(row=>(row.p.tonDau||0)!==0||recordedProducts.has(row.p.id));
+  V={r,c};
   const nLow=c.rows.filter(x=>stat(x.close,x.p.tonToiThieu||0)==='low').length,nOut=c.rows.filter(x=>stat(x.close,x.p.tonToiThieu||0)==='out').length;
   let h='<header class="head"><div>'+(r.kind==='month'?'<p style="font-size:12.5px;color:var(--ink2)">Năm '+r.y+' ›</p>':'')+'<h1>'+r.title+'</h1><div class="meta"><span>'+dmy(r.from)+' – '+dmy(r.to)+'</span>'+chipHtml()+'</div></div>'+
    '<div class="actions"><button class="btn sell" data-act="tk" data-type="xuat"'+dis+'>↑ Bán hàng</button><button class="btn in" data-act="tk" data-type="nhap"'+dis+'>↓ Nhập hàng</button><button class="btn cnt" data-act="cnt"'+dis+'>✓ Kiểm kho</button></div></header>'+bannerHtml();
